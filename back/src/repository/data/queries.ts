@@ -56,15 +56,14 @@ WHERE leader=$1
 `;
 
 const selectUserSquad = `
-SELECT *
+SELECT id
 FROM ${tableUsers}
-WHERE squad=$1
-RETURNING id;
+WHERE squad=$1;
 `;
 
 const updateUserSquad = `
 UPDATE ${tableUsers}
-SET squad = $2,
+SET squad = $2
 WHERE id = $1
 RETURNING *;
 `;
