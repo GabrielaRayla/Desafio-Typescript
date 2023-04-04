@@ -152,4 +152,44 @@ export class TeamRepo {
       throw error;
     }
   }
+
+  public async getAllTeams(user: any){
+    try{
+      let teams: ITeam[] = [];
+      if (user.is_admin) {
+        teams = await connectDb(teamQuery.getAllTeams, []);
+      }
+  
+      return teams;
+    } catch (error) {
+      console.log(TAG, "error caught at getAllTeams()");
+      throw error;
+    }
+  }
+  
+  public async getOneTeam(teamId: string){
+    try{
+        const teams = await connectDb(teamQuery.getOneTeam, [teamId]);
+        if (teams.length === 0) {
+          return null;
+        }
+        return teams;
+    } catch (error) {
+      console.log(TAG, "error caught at getAllTeams()");
+      throw error;
+    }
+  }
+  
+  public async getViewMembers(teamId: string){
+    try{
+        const teams: IUserResponse[] = await connectDb(teamQuery.getViewMembers, [teamId]);
+        if (teams.length === 0) {
+          throw "O time Não está cadastrado!"
+        }
+        return teams;
+    } catch (error) {
+      console.log(TAG, "error caught at getAllTeams()");
+      throw error;
+    }
+  }
 }

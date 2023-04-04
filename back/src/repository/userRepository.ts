@@ -40,6 +40,43 @@ export class Accountsrepo {
     }
   }
 
+
+  public async getUserId(username: string){
+    try {
+      const response = await connectDb(query.getUserId, [username]);
+      const data: IUser = response[0];
+      return data;
+    } catch (error) {
+      console.log(TAG ,"Usuario não encontrado!");
+        throw error;
+    }
+  }
+  
+  public async getAllUsers(){
+    try{
+      const response = await connectDb(query.getAllUsers, []);
+      const data: IUser = response[0];
+      return data;
+    }catch(error){
+      console.log(TAG,"Usuarios não encontrados!");
+      throw error;
+    }
+  }
+  
+  public async getOneUser(userID: string){
+    try{
+      const response = await connectDb(query.getOneUser, [userID]);
+      if (response.length === 0) {
+        throw "Usuário não encontrado";
+      }
+  
+      const user = response[0];
+      return user;
+    }catch(error){
+      console.log(TAG,"Usuario não encontrado!");
+      throw error;
+      }
+    }
   public async updateUser(user: IUserRequest, id:string) {
     try {
       // Verificando se já está cadastrado no banco de dados

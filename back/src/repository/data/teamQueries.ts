@@ -63,6 +63,33 @@ FROM usuario
 INNER JOIN equipe
 ON usuario.squad = equipe.id;`;
 
+const getAllTeams=`
+SELECT *
+FROM public.${teamTable}
+WHERE id_lider_equipe = {leader} OR {is_admin} = 'Administrador'
+`
+const getOneTeam = `
+SELECT *
+FROM public.${teamTable}
+WHERE id_equipe = {id_equipe} AND (
+      id_lider_equipe = {id_usuario} OR 
+      EXISTS (
+         SELECT 1 
+         FROM funcionarios 
+         WHERE id_funcionario = {id_usuario} AND id_equipe = {id_equipe}
+      ) OR 
+      {funcao} = 'Administrador'
+)
+`
+const getViewMembers = `
+SELECT *
+FROM public.${teamTable}
+WHERE id_equipe = {id_equipe} AND (
+      id_usuario = {id_usuario} OR 
+      id_usuario = (SELECT id_lider_equipe FROM equipes WHERE id_equipe = {id_equipe}) OR 
+      {funcao} = 'Administrador'
+)`
+
 // Objeto com todas as constantes.
 export const teamQuery = {
   getTeams,
@@ -74,4 +101,7 @@ export const teamQuery = {
   updateTeam,
   getUser,
   updateUserSquad,
+  getAllTeams,
+  getOneTeam,
+  getViewMembers,
 };

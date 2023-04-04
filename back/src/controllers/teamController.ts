@@ -162,4 +162,86 @@ export class TeamController {
       res.json(response);
     }
   }
+
+  public async getViewMembers(req: Request, res: Response){
+    const response: ApiResponse<IUserResponse[]> = {
+      message: "",
+      data: null,
+      error: null,
+    }
+    try{
+      const { decoded }: any = req.body;
+      const userId = decoded.user.id;
+      const teamId = req.params.team_id;
+      
+      const members = await teamService.getViewMembers(userId, teamId);  
+
+      response.message = "Membros da equipe encontrados!";
+      response.data = members;
+      response.error = null;
+
+    }catch(err){
+      console.log(TAG, "\n", err);
+
+      response.message = "Não foi possível encontrar os membros da equipe!";
+      response.data = null;
+      response.error = err;
+
+      res.status(500);
+      res.json(response);
+    }
+  }
+  
+  public async getOneTeam(req: Request, res: Response){
+    const response: ApiResponse<IUserResponse[]> = {
+      message: "",
+      data: null,
+      error: null,
+    }
+    try {
+      const { decoded }:any = req.body
+      const userId = decoded.user.id
+      const teamId = req.params.team_id
+      const team = teamService.getOneTeam(decoded, teamId)
+      
+      response.message = "Equipe encontrada!"
+      // response.data = team
+      response.error = null
+    } catch (err) {
+      console.log(TAG, "\n", err);
+
+      response.message = "Não Foi Possivel Encontrar Equipe!";
+      response.data = null;
+      response.error = err;
+
+      res.status(500);
+      res.json(response);
+    }
+  }
+  public async getAllTeams(req: Request, res: Response){
+    const response: ApiResponse<IUserResponse[]> = {
+      message: "",
+      data: null,
+      error: null,
+    }
+    try {
+      const { decoded }:any = req.body
+      const userId = decoded.user.id
+      // const teamId = req.params.team_id
+      const teams = await teamService.getAllTeams(decoded.user)
+      
+      response.message = "Equipes encontradas!"
+      // response.data= teams
+      response.error = null
+    } catch (err) {
+      console.log(TAG, "\n", err);
+
+      response.message = "Não Foi Possivel Encontrar as Equipes!";
+      response.data = null;
+      response.error = err;
+
+      res.status(500);
+      res.json(response);
+    }
+  }
 }

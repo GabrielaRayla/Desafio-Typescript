@@ -20,6 +20,12 @@ route.post(
 route.post("/users/", accountsController.createUser);
 route.post("/login", loginController.login);
 route.post("/teams/", Auth.authenticated, teamController.createTeam);
+route.get("/users/me", accountsController.getProfile);
+route.get("/users/", Auth.authenticated, accountsController.getAllUsers);
+route.get("/users/:user_id", Auth.authenticated, accountsController.getOneUser);
+route.get("/teams/", Auth.authenticated, teamController.getAllTeams);
+route.get("/teams/:team_id", Auth.authenticated, teamController.getOneTeam);
+route.get("/teams/:team_id/members", Auth.authenticated, teamController.getViewMembers);
 
 route.patch(
   "/users/:user_id",

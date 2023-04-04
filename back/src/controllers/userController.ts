@@ -71,14 +71,9 @@ export class AccountsController {
       if (decoded.user.id !== req.params.user_id && !decoded.user.is_admin) {
         throw "Error: Não é possível alterar o cadastro de outro usuário";
       }
-<<<<<<< Updated upstream
       //Verifica se é um usuário comum tentando se transforma em adm.
       if(!decoded.user.is_admin && user.is_admin == true){
         throw 'Error: Esse usuário não pode alterar a coluna de Administrador'
-=======
-      if (!decoded.user.is_admin && req.body.is_admin !== undefined) {
-        throw "Error: Esse usuário não pode alterar a coluna de Administrador";
->>>>>>> Stashed changes
       }
 
       //Nessa rota não é possível alterar o squad de um cadastro.
@@ -149,6 +144,77 @@ export class AccountsController {
       res.json(response);
     }
   }
+  public async getProfile(req: Request, res: Response) {
+    const response: ApiResponse<ApiResponseData> = {
+      message: "",
+      data: null,
+      error: null,
+    };
+  
+    try {
+      const decoded : any = req.body;
+          const user_id = decoded.user.id;
+      
+          const userProfile = await accountsService.getUserId(user_id);
+          response.message = "Perfil OK!";
+          response.data = userProfile;
+      
+          res.status(200).json(response);
+
+    } catch (err) {
+      console.log(err);
+      response.message = "Erro 123";
+      response.error = err;
+  
+      res.status(400).json(response);
+    }
+  }
+
+
+  public async getAllUsers(req: Request ,res:Response) {
+    const response: ApiResponse<ApiResponseData> = {
+      message: "",
+      data: null,
+      error: null,
+    };
+    
+  try {
+    const { decoded }: any = req.body;
+    if (!decoded.user.is_admin) {
+      throw "Error: não é um Administrador";
+    }
+    const serviceResponse = await accountsService.getAllUsers();
+    response.message = "Lista de usuários encontrada!";
+    response.data = serviceResponse;
+
+  }catch (err) {
+    console.log(err);
+    response.message = "Erro 123";
+    response.error = err;
+
+    res.status(400).json(response);
+  }
+  }
+  
+public async getOneUser(req: Request ,res:Response){
+  const response: ApiResponse<ApiResponseData> = {
+    message: "",
+    data: null,
+    error: null,
+  };
+  try{
+    const userID = req.params.user_id;
+    const user = await accountsService.getOneUser(userID);
+    res.status(200).send(user);
+    response.message = "usuário encontrado!";
+  }catch (err) {
+    console.log(err);
+    response.message = "Erro 123";
+    response.error = err;
+
+    res.status(400).json(response);
+  }
+}
 }
 
 export class LoginController {
@@ -207,4 +273,6 @@ export class LoginController {
       return res.status(400).json(response);
     }
   }
+
+  
 }

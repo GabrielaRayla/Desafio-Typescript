@@ -76,6 +76,23 @@ WHERE id = $1
 RETURNING ${allCollumns};
 `;
 
+const getUserId = `
+FROM public.${tableUsers} 
+WHERE id = $1;
+`;
+
+const getAllUsers=`
+SELECT * 
+FROM public.${tableUsers}
+`;
+
+const getOneUser= `
+SELECT *
+FROM public.${tableUsers}
+WHERE id_usuario = {usuario} AND (is_admin = 'Administrador' 
+OR (leader = 'Líder da equipe' AND id_equipe = {id}) 
+OR learder = 'Líder das demais equipes')`
+
 // Objeto com todas as constantes.
 export const query = {
   getUsers,
@@ -87,4 +104,7 @@ export const query = {
   leaderSquad,
   selectUserSquad,
   updateUserSquad,
+  getAllUsers,
+  getOneUser,
+  getUserId,
 };
